@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Otomatik tiklayicinin cekirdegi.
+
+  canPerformGestures="true"
+      dispatchGesture() cagirabilmek icin ZORUNLU. Bu olmadan servis baglansa bile
+      jest gonderemez ve dispatchGesture() surekli false doner.
+
+  accessibilityEventTypes="typeWindowStateChanged"
+      Ekran icerigini okumuyoruz, sadece jest gonderiyoruz. Bu yuzden mumkun olan
+      en dar olay tipi seciliyor; boylece sistem bize gereksiz olay akisi pompalamaz
+      (yuksek CPS'te bu olcusebilir bir CPU tasarrufu saglar).
+
+  canRetrieveWindowContent="false"
+      Ekrandaki metinleri/dugumleri hic okumadigimiz icin bu yetkiyi istemiyoruz.
+      Kullaniciya gosterilen izin ekraninda da daha az sey talep edilmis olur.
+
+  flagRequestFilterKeyEvents + canRequestFilterKeyEvents="true"
+      Ses kisma tusuyla acil durdurma icin onKeyEvent() geri cagrisi gerekiyor.
+
+  notificationTimeout="100"
+      Olay bosaltma araligi; 0 yapmak yogun ekranlarda gereksiz cagri yagmuru yaratir.
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagDefault|flagRequestFilterKeyEvents"
+    android:canPerformGestures="true"
+    android:canRequestFilterKeyEvents="true"
+    android:canRetrieveWindowContent="false"
+    android:description="@string/accessibility_service_description"
+    android:notificationTimeout="100"
+    android:summary="@string/accessibility_service_summary" />

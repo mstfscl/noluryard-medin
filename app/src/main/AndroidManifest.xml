@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Yuzen balonun diger uygulamalarin uzerinde cizilebilmesi icin. -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- Ana uygulama kapansa bile calismaya devam eden foreground service icin. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <!-- Android 13+ bildirim izni; foreground service bildirimi ve "durdu" bildirimi icin. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Durma aninda kisa geri bildirim. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:name=".AutoClickerApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AutoClicker">
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AutoClicker">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          Tiklama motoru. dispatchGesture() cagrilabilmesi icin
+          accessibility_service_config.xml icinde canPerformGestures="true" sart.
+        -->
+        <service
+            android:name=".engine.ClickerAccessibilityService"
+            android:exported="true"
+            android:label="@string/accessibility_service_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!--
+          Yuzen balonu tasiyan foreground service.
+          specialUse: Android 14+ her foreground service icin tip zorunlu kiliyor;
+          bu servis kamera/konum/medya gibi hazir tiplerin hicbirine girmedigi icin
+          specialUse + subtype aciklamasi kullaniliyor.
+        -->
+        <service
+            android:name=".overlay.OverlayService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="user_initiated_floating_autoclicker_control_panel" />
+        </service>
+
+    </application>
+</manifest>

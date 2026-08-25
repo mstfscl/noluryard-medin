@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pickerRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.noluryard.autoclicker.overlay.TargetCanvasView
+        android:id="@+id/canvas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/pickerHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_panel"
+        android:padding="14dp"
+        android:textColor="@color/on_panel"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="48dp"
+        android:background="@drawable/bg_panel"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/btnPickerClear"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_pill"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:text="@string/picker_clear"
+            android:textAllCaps="false"
+            android:textColor="@color/on_panel" />
+
+        <Button
+            android:id="@+id/btnPickerCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_pill"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:text="@string/picker_cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/on_panel" />
+
+        <Button
+            android:id="@+id/btnPickerDone"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_pill_accent"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:text="@string/picker_done"
+            android:textAllCaps="false"
+            android:textColor="@color/on_panel" />
+    </LinearLayout>
+</FrameLayout>
