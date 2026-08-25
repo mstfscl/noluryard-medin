@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -60,6 +61,11 @@ class OverlayService : Service() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private lateinit var windowManager: WindowManager
+
+    /** Overlay pencereleri saf framework temasiyla sisirilir (bkz. themes.xml). */
+    private val inflater: LayoutInflater by lazy {
+        LayoutInflater.from(ContextThemeWrapper(this, R.style.Theme_AutoClicker_Overlay))
+    }
     private val repo by lazy { AutoClickerApp.settingsRepository(this) }
 
     // ---- balon ----
@@ -75,6 +81,7 @@ class OverlayService : Service() {
     private var btnStart: Button? = null
 
     private var isCollapsed = false
+    private var bubblePositionRestored = false
 
     // ---- ek pencereler ----
     private var pickerView: View? = null
@@ -207,7 +214,7 @@ class OverlayService : Service() {
             return
         }
 
-        val view = LayoutInflater.from(this).inflate(R.layout.overlay_bubble, null)
+        val view = inflater.inflate(R.layout.overlay_bubble, null)
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -333,7 +340,11 @@ class OverlayService : Service() {
     private fun applyBubblePositionIfNeeded(newSettings: ClickerSettings) {
         val view = bubbleView ?: return
         val params = bubbleParams ?: return
+        // Sadece ilk yuklemede uygula: sonrasinda kaynak konum surukleme/animasyon,
+        // DataStore degil. Aksi halde her kaydetmede balon geri ziplar.
+        if (bubblePositionRestored) return
         if (newSettings.bubbleX < 0 || newSettings.bubbleY < 0) return
+        bubblePositionRestored = true
         if (params.x == newSettings.bubbleX && params.y == newSettings.bubbleY) return
         params.x = newSettings.bubbleX
         params.y = newSettings.bubbleY
@@ -397,7 +408,7 @@ class OverlayService : Service() {
         if (!Settings.canDrawOverlays(this)) return
         ClickerController.stop(StopReason.MANUAL)
 
-        val view = LayoutInflater.from(this).inflate(R.layout.overlay_picker, null)
+        val view = inflater.inflate(R.layout.overlay_picker, null)
         val canvas = view.findViewById<TargetCanvasView>(R.id.canvas)
         val hint = view.findViewById<TextView>(R.id.pickerHint)
 
@@ -443,7 +454,7 @@ class OverlayService : Service() {
         if (shieldView != null) return
         if (!Settings.canDrawOverlays(this)) return
 
-        val view = LayoutInflater.from(this).inflate(R.layout.overlay_shield, null)
+        val view = inflater.inflate(R.layout.overlay_shield, null)
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,

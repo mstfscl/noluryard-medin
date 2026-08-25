@@ -49,7 +49,20 @@ jobs:
       - name: Build release APK
         run: |
           chmod +x ./gradlew
-          ./gradlew assembleRelease --stacktrace --no-daemon
+          set -o pipefail
+          # --stacktrace bilerek yok: Gradle'in 150 satirlik ic yigin izi
+          # gercek hatayi loglarda gorunmez yapiyor. Hata olursa asagida
+          # sadece anlamli bolum yazdiriliyor.
+          if ./gradlew assembleRelease --no-daemon --warning-mode=none 2>&1 | tee build.log; then
+            exit 0
+          fi
+          echo "::group::Hata ozeti"
+          sed -n '/FAILURE: Build/,/^\* Get more help/p' build.log | head -100
+          echo "::endgroup::"
+          echo "::group::Derleyici hatalari"
+          grep -nE '^e: |^w: .*error|error:' build.log | head -80 || true
+          echo "::endgroup::"
+          exit 1
 
       - name: Verify APK
         run: |

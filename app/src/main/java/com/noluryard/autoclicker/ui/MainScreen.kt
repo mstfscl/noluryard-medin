@@ -202,17 +202,17 @@ private fun LiveStatusCard(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
-        if (clickProgress != null) {
+        clickProgress?.let { value ->
             Spacer(Modifier.height(10.dp))
             LinearProgressIndicator(
-                progress = { clickProgress },
+                progress = { value },
                 modifier = Modifier.fillMaxWidth(),
             )
         }
-        if (timeProgress != null) {
+        timeProgress?.let { value ->
             Spacer(Modifier.height(6.dp))
             LinearProgressIndicator(
-                progress = { timeProgress },
+                progress = { value },
                 modifier = Modifier.fillMaxWidth(),
             )
         }

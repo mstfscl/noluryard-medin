@@ -5,5 +5,13 @@
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <style name="Theme.AutoClicker.Overlay" parent="Theme.Material3.Dark.NoActionBar" />
+    <!--
+      Overlay pencereleri Service context'inden inflate ediliyor ve orada
+      AppCompat/Material widget degistirici yok. Bu yuzden overlay temasi
+      bilerek saf framework temasindan tureniyor: hicbir kutuphane attribute'una
+      bagimli olmadan Button/TextView/ProgressBar guvenle sisirilebilsin.
+    -->
+    <style name="Theme.AutoClicker.Overlay" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

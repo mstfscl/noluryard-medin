@@ -135,6 +135,9 @@ val copyApkToOut by tasks.registering(Copy::class) {
     }
 }
 
-tasks.named("assembleRelease") {
+// AGP variant task'lari (assembleRelease dahil) afterEvaluate'te olusuyor;
+// tasks.named(...) burada henuz olmayan bir task'i arar ve konfigurasyonu patlatir.
+// tasks.matching + configureEach tembel calisir: task gercekten olusturuldugunda uygulanir.
+tasks.matching { it.name == "assembleRelease" }.configureEach {
     finalizedBy(copyApkToOut)
 }
